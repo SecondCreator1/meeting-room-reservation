@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Bookings - Room Booking System</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <h1>Room Booking System</h1>
+    <nav>
+      <ul id="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../rooms/rooms.html">Rooms</a></li>
+        <li><a href="reservations.html" class="active">My Bookings</a></li>
+        <li><a href="#" id="logout-link">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h2>My Bookings</h2>
+    <div id="message"></div>
+    
+    <section id="bookings-list">
+      <h3>Current Reservations</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Room</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="bookings-table-body">
+          <!-- Bookings will be loaded here -->
+        </tbody>
+      </table>
+    </section>
+    
+    <section id="new-booking-section" class="form-container">
+      <h3>Make a New Booking</h3>
+      <form id="new-booking-form">
+        <div class="form-group">
+          <label for="booking-room">Room</label>
+          <select id="booking-room" required>
+            <option value="">Select a room</option>
+            <!-- Rooms will be loaded here -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="booking-start">Start Time</label>
+          <input type="datetime-local" id="booking-start" required>
+        </div>
+        <div class="form-group">
+          <label for="booking-end">End Time</label>
+          <input type="datetime-local" id="booking-end" required>
+        </div>
+        <button type="submit">Book Room</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="../script.js"></script>
+  <script src="reservations.js"></script>
+</body>
+</html>

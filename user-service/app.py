@@ -1,11 +1,11 @@
-from flask import Flask, jsonify
-from flask_jwt_extended import JWTManager
-from models import db
+from flask import Flask, jsonify, send_from_directory, redirect, url_for
+from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
+from models import db, User
 from routes import auth_bp, user_bp
 import os
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='../frontend')  # Serving static files from frontend folder
     
     # Load configuration
     app.config.from_object('config.Config')
@@ -40,6 +40,31 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(user_bp)
     
+    # Serve frontend files for specific routes
+    @app.route('/')
+    def home():
+        return send_from_directory(app.static_folder, 'index.html')
+    
+    @app.route('/rooms')
+    @jwt_required()
+    def rooms():
+        # Ensure user is authorized to view rooms
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(id=current_user).first()
+        if user.role != 'admin':  # Only allow access if user is admin
+            return jsonify({"error": "Forbidden", "message": "You don't have permission to access rooms."}), 403
+        return send_from_directory(app.static_folder, 'rooms/rooms.html')
+
+    @app.route('/reservations')
+    @jwt_required()
+    def reservations():
+        # Ensure user is authorized to view reservations
+        current_user = get_jwt_identity()
+        user = User.query.filter_by(id=current_user).first()
+        if user.role != 'user' and user.role != 'admin':  # Allow users and admins to access
+            return jsonify({"error": "Forbidden", "message": "You don't have permission to view your bookings."}), 403
+        return send_from_directory(app.static_folder, 'reservations/reservations.html')
+
     # Error handlers
     @app.errorhandler(400)
     def bad_request(error):

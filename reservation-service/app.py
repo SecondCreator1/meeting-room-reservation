@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_jwt_extended import JWTManager
 from models import db, Reservation
 from routes import reservations_bp, availability_bp
@@ -28,7 +28,7 @@ class NoBrokersAvailable(Exception):
     pass
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='static', template_folder='templates')
     
     # Add this line to disable strict slashes globally
     app.url_map.strict_slashes = False
@@ -69,6 +69,19 @@ def create_app():
     def server_error(error):
         return jsonify({"error": "Internal Server Error", "message": str(error)}), 500
     
+    # Serve frontend HTML page for booking page
+    @app.route('/reservations')
+    def reservations_page():
+        return render_template('reservations.html')
+    
+    @app.route('/rooms')
+    def rooms_page():
+        return render_template('rooms.html')
+    
+    @app.route('/home')
+    def home_page():
+        return render_template('index.html')
+
     # Create database tables
     with app.app_context():
         db.create_all()

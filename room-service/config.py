@@ -6,7 +6,7 @@ load_dotenv()
 
 class Config:
     # Database configuration
-    DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/room_db')
+    DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres:newpassword@localhost:5432/room_db')
     SQLALCHEMY_DATABASE_URI = DATABASE_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rooms - Room Booking System</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <h1>Room Booking System</h1>
+    <nav>
+      <ul id="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="rooms.html" class="active">Rooms</a></li>
+        <li><a href="../reservations/reservations.html">My Bookings</a></li>
+        <li><a href="#" id="logout-link">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Room Management</h2>
+    <div id="message"></div>
+    
+    <section id="rooms-list">
+      <h3>Available Rooms</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Capacity</th>
+            <th>Equipment</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="rooms-table-body">
+          <!-- Rooms will be loaded here -->
+        </tbody>
+      </table>
+    </section>
+    
+    <section id="add-room-section" class="form-container">
+      <h3>Add New Room</h3>
+      <form id="add-room-form">
+        <div class="form-group">
+          <label for="room-name">Room Name</label>
+          <input type="text" id="room-name" required>
+        </div>
+        <div class="form-group">
+          <label for="room-capacity">Capacity</label>
+          <input type="number" id="room-capacity" required min="1">
+        </div>
+        <div class="form-group">
+          <label for="room-equipment">Equipment</label>
+          <input type="text" id="room-equipment">
+        </div>
+        <button type="submit">Add Room</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="../script.js"></script>
+  <script src="rooms.js"></script>
+</body>
+</html>

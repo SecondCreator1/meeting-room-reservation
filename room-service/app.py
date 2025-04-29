@@ -7,7 +7,7 @@ import os
 def create_app():
     app = Flask(__name__)
     
-    # Add this line to disable strict slashes globally
+    # Disable strict slashes globally
     app.url_map.strict_slashes = False
     
     # Load configuration
@@ -18,7 +18,7 @@ def create_app():
     jwt = JWTManager(app)
     
     # Register blueprints
-    app.register_blueprint(rooms_bp)
+    app.register_blueprint(rooms_bp, url_prefix='/rooms')
     
     # Error handlers
     @app.errorhandler(400)

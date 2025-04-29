@@ -43,7 +43,7 @@ def main():
     # Check Kafka status
     if not check_kafka(host, port):
         print("\nKafka may not be running. You can start it using:")
-        print("cd ~/meeting-room-res-system-api/kafka")
+        print("cd ~/meeting-room-reservation/kafka")
         print("docker-compose up -d")
     
 if __name__ == "__main__":

@@ -22,7 +22,7 @@ def set_admin(email):
     from user_service.models import User
 
     # Connect to database
-    db_url = os.getenv('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/user_db')
+    db_url = os.getenv('DATABASE_URL', 'postgresql://postgres:ouss123@localhost:5432/user_db')
     engine = create_engine(db_url)
     Session = sessionmaker(bind=engine)
     session = Session()
