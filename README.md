@@ -1,6 +1,17 @@
 # Meeting Room Reservation System API
 
-A microservice-based meeting room reservation system for managing meeting spaces, bookings, and user accounts.
+# Meeting Room Reservation System
+
+This project is a Meeting Room Reservation System that allows users to book and manage meeting rooms. It is designed for easy reservation and management of available meeting rooms for businesses, schools, or any organizations that need a simple and effective way to handle meeting room reservations.
+
+## Features
+
+- User authentication (login/signup)
+- Reservation of meeting rooms
+- View available rooms
+- View current reservations
+- Admin functionality to manage rooms and reservations
+- Real-time reservation updates
 
 ## Architecture
 
@@ -11,12 +22,12 @@ This system is composed of three microservices:
 - **Reservation Service**: Handles room booking and availability
 
 ### Technology Stack
-
+-**Frontend**: HTML , CSS , JS
 - **Backend**: Python Flask
 - **Database**: PostgreSQL
 - **Message Broker**: Apache Kafka
 - **Authentication**: OAuth 2.0 with JWT
-- **Containerization**: Docker
+- **Containerization**: Docker,K8S
 
 ## Prerequisites
 
@@ -30,100 +41,13 @@ This system is composed of three microservices:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/meeting-room-res-system-api.git
-cd meeting-room-res-system-api
+git clone https://github.com/SecondCreator1/meeting-room-reservation.git
+cd meeting-room-reservation
 ```
 
-### 2. Set Up Environment Files
-
-Create `.env` files for each service:
-
-```bash
-# For user-service
-cp user-service/.env.example user-service/.env
-# For room-service
-cp room-service/.env.example room-service/.env
-# For reservation-service
-cp reservation-service/.env.example reservation-service/.env
 ```
 
-Update each `.env` file with your configuration (database credentials, JWT secret, etc.)
-
-### 3. Set Up PostgreSQL Databases
-
-```bash
-sudo -u postgres psql
-
-CREATE DATABASE user_db;
-CREATE DATABASE room_db;
-CREATE DATABASE reservation_db;
-
-# Grant privileges
-GRANT ALL PRIVILEGES ON DATABASE user_db TO postgres;
-GRANT ALL PRIVILEGES ON DATABASE room_db TO postgres;
-GRANT ALL PRIVILEGES ON DATABASE reservation_db TO postgres;
-
-\q
-```
-
-### 4. Configure PostgreSQL Authentication
-
-Edit PostgreSQL configuration to use password authentication:
-
-```bash
-sudo nano /etc/postgresql/14/main/pg_hba.conf
-```
-
-Change local authentication methods from `peer` to `md5` or `scram-sha-256`:
-
-```
-local   all             postgres                                md5
-local   all             all                                     md5
-```
-
-Restart PostgreSQL:
-
-```bash
-sudo systemctl restart postgresql
-```
-
-### 5. Set Up Kafka with Docker
-
-```bash
-# Create kafka directory
-mkdir -p kafka
-cd kafka
-
-# Create docker-compose.yml
-cat > docker-compose.yml << 'EOF'
-version: '3'
-services:
-  zookeeper:
-    image: wurstmeister/zookeeper
-    ports:
-      - "2181:2181"
-  kafka:
-    image: wurstmeister/kafka
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
-      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-EOF
-
-# Start Kafka and Zookeeper
-docker-compose up -d
-
-# Create required topics
-docker-compose exec kafka kafka-topics.sh --create --topic room_events --bootstrap-server kafka:9093 --partitions 1 --replication-factor 1
-```
-
-### 6. Install Python Dependencies
+### 2. Install Python Dependencies
 
 ```bash
 # Create and activate virtual environment
@@ -136,7 +60,7 @@ pip install -r room-service/requirements.txt
 pip install -r reservation-service/requirements.txt
 ```
 
-### 7. Configure Google OAuth
+### 3. Configure Google OAuth
 
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
 2. Navigate to "APIs & Services" > "Credentials"
@@ -144,7 +68,7 @@ pip install -r reservation-service/requirements.txt
 4. Add `http://localhost:5000/auth/google/callback` to Authorized Redirect URIs
 5. Add your client ID and secret to `user-service/.env`
 
-### 8. Start the Services
+### 4. Start the Services
 
 Start each service in a separate terminal:
 
@@ -204,43 +128,6 @@ python app.py
 - `GET /availability` - Check room availability
   - Query parameters: `room_id`, `date`
 
-## Testing
-
-### Testing with cURL
-
-```bash
-# Authenticate (this will redirect to browser)
-curl http://localhost:5000/auth/google/login
-
-# After authentication, save the JWT token and use for other requests
-
-# Create a room (admin only)
-curl -X POST http://localhost:5001/rooms \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{"name": "Conference Room A", "capacity": 10, "equipment": "Projector, Whiteboard"}'
-
-# Create a reservation
-curl -X POST http://localhost:5002/reservations \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{"room_id": 1, "start_time": "2025-04-16T10:00:00", "end_time": "2025-04-16T11:00:00", "purpose": "Team Meeting"}'
-```
-
-## Troubleshooting
-
-### Database Connection Issues
-- Ensure PostgreSQL is running: `sudo systemctl status postgresql`
-- Verify database credentials in `.env` files
-- Check PostgreSQL authentication configuration in `pg_hba.conf`
-
-### Kafka Issues
-- Verify Kafka is running: `docker ps`
-- Check Kafka logs: `docker-compose logs kafka`
-
-### OAuth Authentication Issues
-- Verify redirect URIs match between Google Cloud Console and application
-- Ensure correct client ID and secret in `.env` file
 
 ## License
 
